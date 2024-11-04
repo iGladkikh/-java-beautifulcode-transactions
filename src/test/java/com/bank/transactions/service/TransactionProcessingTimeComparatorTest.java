@@ -46,14 +46,21 @@ public class TransactionProcessingTimeComparatorTest {
 
     long processTransactions(TransactionProcessor processor, int count) throws ExecutionException, InterruptedException {
         long from = System.currentTimeMillis();
+        List<CompletableFuture<Transaction>> futureTransactions = new ArrayList<>(count);
 
-        List<Long> createdTds = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            CompletableFuture<Transaction> transaction =
-                    processor.addTransaction(random.nextDouble(-9999, 9999));
-            createdTds.add(transaction.get().getId());
+            CompletableFuture<Transaction> future
+                    = processor.addTransaction(random.nextDouble(-999, 999));
+
+            futureTransactions.add(future);
         }
-        processor.processTransactions(createdTds);
+
+        List<Long> createdIds = new ArrayList<>();
+        for (CompletableFuture<Transaction> future : futureTransactions) {
+            createdIds.add(future.get().getId());
+        }
+
+        processor.processTransactions(createdIds);
 
         long to = System.currentTimeMillis();
         return to - from;

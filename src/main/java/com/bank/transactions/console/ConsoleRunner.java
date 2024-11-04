@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Scanner;
 
 @Component
@@ -38,7 +37,7 @@ public class ConsoleRunner {
                         break;
                     case "2":
                         System.out.println("Введите id");
-                        service.processTransactions(List.of(Long.parseLong(scanner.nextLine())));
+                        service.processTransaction(Long.parseLong(scanner.nextLine()));
                         break;
                     case "3":
                         System.out.println("Введите id");

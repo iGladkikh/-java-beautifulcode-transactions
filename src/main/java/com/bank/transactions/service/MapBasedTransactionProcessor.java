@@ -3,6 +3,7 @@ package com.bank.transactions.service;
 
 import com.bank.transactions.model.Transaction;
 import com.bank.transactions.repository.TransactionRepository;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
@@ -29,7 +30,8 @@ public class MapBasedTransactionProcessor implements TransactionProcessor {
     }
 
     @Override
-    @Async("FixedThreadPoolTaskExecutor")
+    @Async
+    @Synchronized
     public CompletableFuture<Transaction> addTransaction(double amount) {
         if (amount == 0) {
             throw new IllegalArgumentException("Amount cannot be zero");
@@ -50,7 +52,8 @@ public class MapBasedTransactionProcessor implements TransactionProcessor {
     }
 
     @Override
-    @Async("FixedThreadPoolTaskExecutor")
+    @Async
+    @Synchronized
     public void processTransaction(Long id) {
         Transaction transaction = getTransaction(id);
 
@@ -64,6 +67,7 @@ public class MapBasedTransactionProcessor implements TransactionProcessor {
     }
 
     @Override
+    @Synchronized
     public int getTransactionsCount() {
         return repository.size();
     }

@@ -30,17 +30,24 @@ abstract class AbstractTransactionProcessorTest {
     @Test
     public void whenAddTransactionsWithZeroArgument_thenThrowExecutionException() {
         assertThrows(Exception.class,
-                () -> service.addTransaction(0));
+                () -> service.addTransaction(0).join());
     }
 
     @Test
     public void addTransactions() {
         int countToAdd = 1000;
         int transactionsCountBeforeAdd = service.getTransactionsCount();
+        List<CompletableFuture<Transaction>> futureTransactions = new ArrayList<>(countToAdd);
 
         for (int i = 0; i < countToAdd; i++) {
-            service.addTransaction(random.nextDouble(-999999, 999999));
+            CompletableFuture<Transaction> future
+                    = service.addTransaction(random.nextDouble(-999999, 999999));
+
+            futureTransactions.add(future);
         }
+        CompletableFuture<Void> combinedFuture = CompletableFuture.allOf(futureTransactions.toArray(new CompletableFuture[0]));
+        combinedFuture.join();
+
         int transactionsCountAfter = service.getTransactionsCount();
 
         assertEquals(transactionsCountAfter - transactionsCountBeforeAdd, countToAdd);
@@ -53,7 +60,7 @@ abstract class AbstractTransactionProcessorTest {
         System.setOut(new PrintStream(outputStream));
 
         // контролируемая сумма определена в application.properties или в аннотации @AmountAuditable
-        service.addTransaction(600_000);
+        service.addTransaction(600_000).join();
 
         System.setOut(originalSystemOut);
         String logOutput = outputStream.toString();
@@ -67,8 +74,8 @@ abstract class AbstractTransactionProcessorTest {
         List<Long> createdTds = new ArrayList<>();
 
         for (int i = 0; i < count; i++) {
-            CompletableFuture<Transaction> transaction = service.addTransaction(random.nextDouble(-9999, 9999));
-            createdTds.add(transaction.get().getId());
+            Transaction transaction = service.addTransaction(random.nextDouble(-9999, 9999)).get();
+            createdTds.add(transaction.getId());
         }
         service.processTransactions(createdTds);
 
