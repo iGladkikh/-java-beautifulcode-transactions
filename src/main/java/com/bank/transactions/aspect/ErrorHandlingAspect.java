@@ -1,8 +1,7 @@
 package com.bank.transactions.aspect;
 
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.context.annotation.Profile;
@@ -22,13 +21,8 @@ public class ErrorHandlingAspect {
     static void allServiceMethods() {
     }
 
-    @Around("allServiceMethods()")
-    public Object throwingAdvice(ProceedingJoinPoint point) {
-        try {
-            return point.proceed();
-        } catch (Throwable e) {
-            log.error("Throwing advice. Exception: {}", e.getMessage());
-            return null;
-        }
+    @AfterThrowing(value = "allServiceMethods()", throwing = "e")
+    public void afterThrowingAdvice(Exception e) {
+        log.error("After throwing advice. Exception: {}", e.getMessage());
     }
 }
