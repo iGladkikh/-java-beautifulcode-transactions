@@ -5,9 +5,8 @@ import com.bank.transactions.annotation.AmountAuditable;
 import com.bank.transactions.model.Transaction;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /*
  * Класс используется только для тестирования.
@@ -15,7 +14,7 @@ import java.util.Optional;
 
 @Repository("ListBasedRepository")
 public class ListBasedTransactionRepository implements TransactionRepository {
-    private final List<Transaction> transactions = new ArrayList<>();
+    private final CopyOnWriteArrayList<Transaction> transactions = new CopyOnWriteArrayList<>();
 
     @Override
     public Optional<Transaction> findById(Long id) {
