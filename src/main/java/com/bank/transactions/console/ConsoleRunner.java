@@ -33,11 +33,13 @@ public class ConsoleRunner {
                     case "1":
                         System.out.println("Введите сумму");
                         double amount = Double.parseDouble(scanner.nextLine());
-                        service.addTransaction(amount);
+                        service.addTransaction(amount).join();
+                        System.out.println("Готово!");
                         break;
                     case "2":
                         System.out.println("Введите id");
-                        service.processTransaction(Long.parseLong(scanner.nextLine()));
+                        service.processTransaction(Long.parseLong(scanner.nextLine())).join();
+                        System.out.println("Готово!");
                         break;
                     case "3":
                         System.out.println("Введите id");
@@ -54,7 +56,7 @@ public class ConsoleRunner {
     }
 
     private static void printMenu() {
-        System.out.println("Выберите команду:");
+        System.out.println("\nВыберите команду:");
         System.out.println("1 - Добавить новую транзакцию");
         System.out.println("2 - Провести транзакцию");
         System.out.println("3 - Показать транзакцию");

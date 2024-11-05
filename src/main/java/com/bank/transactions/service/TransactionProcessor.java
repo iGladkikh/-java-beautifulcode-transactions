@@ -13,7 +13,7 @@ public interface TransactionProcessor {
 
     void processTransactions(Collection<Long> ids);
 
-    void processTransaction(Long id);
+    CompletableFuture<Transaction> processTransaction(Long id);
 
     int getTransactionsCount();
 }
