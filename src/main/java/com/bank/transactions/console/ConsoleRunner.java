@@ -47,7 +47,8 @@ public class ConsoleRunner {
                         System.out.println(transaction);
                         break;
                     case "0":
-                        return;
+                        System.out.println("Завершение работы");
+                        System.exit(0);
                 }
             } catch (Exception e) {
                 System.out.println("Ошибочка вышла");
