@@ -12,11 +12,11 @@ import java.util.concurrent.Executor;
 @Slf4j
 @Configuration
 public class SpringAsyncConfig implements AsyncConfigurer {
-    private static final int DEFAULT_POOL_SIZE = 1;
+    private static final int N_CPUS = Runtime.getRuntime().availableProcessors();
     private final int corePoolSize;
 
     public SpringAsyncConfig(@Value("${spring.task.execution.pool.core-size}") int corePoolSize) {
-        this.corePoolSize = corePoolSize <= 0 ? DEFAULT_POOL_SIZE : corePoolSize;
+        this.corePoolSize = corePoolSize <= 0 ? N_CPUS + 1 : corePoolSize;
     }
 
     @Override
