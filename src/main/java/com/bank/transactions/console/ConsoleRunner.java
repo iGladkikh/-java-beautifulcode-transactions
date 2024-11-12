@@ -1,6 +1,7 @@
 package com.bank.transactions.console;
 
 import com.bank.transactions.model.Transaction;
+import com.bank.transactions.schedule.AppAutoCloser;
 import com.bank.transactions.service.TransactionProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,6 +27,7 @@ public class ConsoleRunner {
     public void consoleRun() {
         while (true) {
             try {
+                AppAutoCloser.updateActivity();
                 printMenu();
 
                 String command = scanner.nextLine();
